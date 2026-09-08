@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b0p0fd4ghaqpe"
+path="res://.godot/imported/Skeleton.obj-63ff659212315bcba9d66b00daa2df06.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Skeleton.obj-63ff659212315bcba9d66b00daa2df06.mesh"]
+
+source_file="res://modelos_videojuegos/crash_tag_team_racing/Skeleton.obj"
+dest_files=["res://.godot/imported/Skeleton.obj-63ff659212315bcba9d66b00daa2df06.mesh", "res://.godot/imported/Skeleton.obj-63ff659212315bcba9d66b00daa2df06.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
