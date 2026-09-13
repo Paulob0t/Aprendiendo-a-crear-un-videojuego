@@ -19,10 +19,12 @@ Cada personaje está estructurado como un `CharacterBody3D` independiente que co
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 idgs-1004-t-1/
+├── controlador_personaje.gd         # Script de físicas, movimiento (WASD/Flechas), salto, apuntar y disparar
+├── mundo.gd                         # Script gestor de selección de personajes, UI y cámara dinámica
 ├── modelos_videojuegos/
 │   ├── aku_aku/                     # Mallas y texturas de la máscara Aku Aku
 │   ├── crash_clasico_ps1/           # Modelo original de Crash Bandicoot PS1
@@ -31,26 +33,31 @@ idgs-1004-t-1/
 │   ├── crash_tag_team_racing/       # Modelo CTTR PS2
 │   ├── katamari_icon/               # Modelo icono de Katamari Damacy PS2
 │   └── trish_dmc1/                  # Modelo de Trish (Devil May Cry 1 PS2)
-├── mundo.tscn                       # Escena 3D principal con todos los personajes, cámara y luz
-├── project.godot                    # Configuración general del proyecto Godot 4
+├── mundo.tscn                       # Escena 3D principal con menú UI, piso y personajes
+├── project.godot                    # Configuración del proyecto e Input Map (WASD, Flechas, Clics)
 └── README.md                        # Documentación del proyecto
 ```
 
 ---
 
-## ⚙️ Características Técnicas
+## Características Técnicas
 
 * **Modelos y Mallas 3D:** Integración directa de archivos `.obj` como recursos `ArrayMesh`.
-* **Materiales y Texturas:** Corrección de componentes de luz difusa (`Kd`) en archivos `.mtl` y mapeo en `StandardMaterial3D` con filtrado nítido para texturas retro.
-* **Físicas y Colisiones:** Dimensionamiento de cápsulas de colisión a partir de las dimensiones del Bounding Box (AABB) escalado de cada modelo.
-* **Escena Principal (`mundo.tscn`):**
-  * `DirectionalLight3D` orientada para generar sombras y volumen tridimensional.
-  * `Camera3D` con encuadre panorámico ajustado para mostrar la vitrina completa de personajes.
+* **Físicas y Colisiones:** `CharacterBody3D` con `CapsuleShape3D` personalizadas para cada personaje y `move_and_slide()`.
+* **Sistema de Movimiento:** Control con WASD / Flechas, aceleración, frenado suave, rotación automática hacia la dirección de avance y salto.
+* **Acciones de Acción:** Soporte para apuntar (Clic Derecho) y disparar (Clic Izquierdo).
+* **Menú de Selección de Personajes:** Interfaz interactiva mediante `CanvasLayer` con botones accesibles y atajos de teclado del 1 al 6.
+* **Cámara de Seguimiento:** Interpolación suave (`lerp`) que sigue dinámicamente al personaje activo.
 
 ---
 
-## 🚀 Cómo Ejecutar el Proyecto
+## Cómo Ejecutar el Proyecto y Controles
 
-1. Clona este repositorio o abre la carpeta en **Godot Engine 4.x** (compatible con Godot 4.7+).
-2. Abre la escena principal `res://mundo.tscn`.
-3. Presiona **F5** (o el botón *Play* en la esquina superior derecha) para ejecutar la simulación 3D.
+1. Abre la carpeta del proyecto en **Godot Engine 4.x**.
+2. Presiona **F5** para ejecutar `res://mundo.tscn`.
+3. **Controles:**
+   * **Moverse:** `W` `A` `S` `D` o `Flechas del teclado`
+   * **Saltar:** `Espacio`
+   * **Apuntar:** `Clic Derecho`
+   * **Disparar:** `Clic Izquierdo`
+   * **Cambiar de personaje:** Clic en los botones del menú superior o teclas `1` al `6`.

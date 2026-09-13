@@ -1,13 +1,26 @@
 [gd_scene format=3 uid="uid://cx5ootqf7noqx"]
 
-[ext_resource type="ArrayMesh" uid="uid://dugu6er7h2tk6" path="res://modelos_videojuegos/crash_skeleton/SkeletonSuit.obj" id="1_mesh"]
-[ext_resource type="Texture2D" uid="uid://dxu3a3a2fynwr" path="res://modelos_videojuegos/crash_skeleton/C_Skeleton.bmp.png" id="2_tex"]
-[ext_resource type="ArrayMesh" uid="uid://csjnlirtt4kt5" path="res://modelos_videojuegos/katamari_icon/normal_ico_0.obj" id="3_katamari_mesh"]
-[ext_resource type="Texture2D" uid="uid://b10imem3s36i5" path="res://modelos_videojuegos/katamari_icon/normal_ico.png" id="4_katamari_tex"]
-[ext_resource type="ArrayMesh" uid="uid://dwrby4snswye" path="res://modelos_videojuegos/crash_clasico_ps1/crashbandicoot.obj" id="5_crash_ps1"]
-[ext_resource type="ArrayMesh" uid="uid://b0p0fd4ghaqpe" path="res://modelos_videojuegos/crash_tag_team_racing/Skeleton.obj" id="7_crash_ttr"]
-[ext_resource type="ArrayMesh" uid="uid://bwojykffw7cyk" path="res://modelos_videojuegos/crash_nitro_kart_save_icon/crash.obj" id="8_crash_cnk"]
-[ext_resource type="ArrayMesh" uid="uid://ttqvgyt33ff0" path="res://modelos_videojuegos/trish_dmc1/trish.obj" id="9_trish"]
+[ext_resource type="Script" uid="uid://cuxo3ypxcqpvv" path="res://mundo.gd" id="1_mundo_script"]
+[ext_resource type="Script" uid="uid://oxe5h8v1eg8l" path="res://controlador_personaje.gd" id="2_controlador"]
+[ext_resource type="ArrayMesh" uid="uid://dugu6er7h2tk6" path="res://modelos_videojuegos/crash_skeleton/SkeletonSuit.obj" id="3_mesh_skeleton"]
+[ext_resource type="Texture2D" uid="uid://dxu3a3a2fynwr" path="res://modelos_videojuegos/crash_skeleton/C_Skeleton.bmp.png" id="4_tex_skeleton"]
+[ext_resource type="ArrayMesh" uid="uid://csjnlirtt4kt5" path="res://modelos_videojuegos/katamari_icon/normal_ico_0.obj" id="5_mesh_katamari"]
+[ext_resource type="Texture2D" uid="uid://b10imem3s36i5" path="res://modelos_videojuegos/katamari_icon/normal_ico.png" id="6_tex_katamari"]
+[ext_resource type="ArrayMesh" uid="uid://dwrby4snswye" path="res://modelos_videojuegos/crash_clasico_ps1/crashbandicoot.obj" id="7_mesh_crash_ps1"]
+[ext_resource type="ArrayMesh" uid="uid://b0p0fd4ghaqpe" path="res://modelos_videojuegos/crash_tag_team_racing/Skeleton.obj" id="8_mesh_crash_ttr"]
+[ext_resource type="ArrayMesh" uid="uid://bwojykffw7cyk" path="res://modelos_videojuegos/crash_nitro_kart_save_icon/crash.obj" id="9_mesh_crash_cnk"]
+[ext_resource type="ArrayMesh" uid="uid://ttqvgyt33ff0" path="res://modelos_videojuegos/trish_dmc1/trish.obj" id="10_mesh_trish"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_piso"]
+albedo_color = Color(0.2, 0.22, 0.25, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_piso"]
+material = SubResource("StandardMaterial3D_piso")
+size = Vector3(60, 1, 60)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_piso"]
+size = Vector3(60, 1, 60)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crash_clasico"]
 radius = 0.45
@@ -18,7 +31,7 @@ radius = 0.35
 height = 1.68
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crash"]
-albedo_texture = ExtResource("2_tex")
+albedo_texture = ExtResource("4_tex_skeleton")
 texture_filter = 0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crash_skeleton"]
@@ -26,7 +39,7 @@ radius = 0.45
 height = 1.55
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_katamari"]
-albedo_texture = ExtResource("4_katamari_tex")
+albedo_texture = ExtResource("6_tex_katamari")
 texture_filter = 0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_katamari"]
@@ -42,77 +55,190 @@ radius = 0.4
 height = 1.7
 
 [node name="Mundo" type="Node3D" unique_id=478569238]
+script = ExtResource("1_mundo_script")
+
+[node name="Piso" type="StaticBody3D" parent="." unique_id=203486976]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Piso" unique_id=1818825802]
+mesh = SubResource("BoxMesh_piso")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Piso" unique_id=1772650784]
+shape = SubResource("BoxShape3D_piso")
 
 [node name="Crash_Clasico_Personaje" type="CharacterBody3D" parent="." unique_id=937538653]
+script = ExtResource("2_controlador")
+nombre_personaje = "Crash Bandicoot Clasico (PS1)"
+esta_activo = true
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Clasico_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Clasico_Personaje" unique_id=1798715541]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
-mesh = ExtResource("5_crash_ps1")
+mesh = ExtResource("7_mesh_crash_ps1")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Clasico_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Clasico_Personaje" unique_id=1136124691]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0.25)
 shape = SubResource("CapsuleShape3D_crash_clasico")
 
 [node name="Trish_DMC1_Personaje" type="CharacterBody3D" parent="." unique_id=195137554]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, 0)
+script = ExtResource("2_controlador")
+nombre_personaje = "Trish (Devil May Cry 1)"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Trish_DMC1_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Trish_DMC1_Personaje" unique_id=1594593107]
 transform = Transform3D(0.004, 0, 0, 0, 0.004, 0, 0, 0, 0.004, 0, 0, 0)
-mesh = ExtResource("9_trish")
+mesh = ExtResource("10_mesh_trish")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Trish_DMC1_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Trish_DMC1_Personaje" unique_id=161188618]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, -0.15)
 shape = SubResource("CapsuleShape3D_trish")
 
 [node name="Crash_Skeleton_Personaje" type="CharacterBody3D" parent="." unique_id=390528859]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, 0)
+script = ExtResource("2_controlador")
+nombre_personaje = "Crash Traje Esqueleto (Xbox 360)"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Skeleton_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Skeleton_Personaje" unique_id=456639107]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_crash")
-mesh = ExtResource("1_mesh")
+mesh = ExtResource("3_mesh_skeleton")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Skeleton_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Skeleton_Personaje" unique_id=108216998]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77, 0.08)
 shape = SubResource("CapsuleShape3D_crash_skeleton")
 
 [node name="Katamari_Personaje" type="CharacterBody3D" parent="." unique_id=2045522976]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+script = ExtResource("2_controlador")
+nombre_personaje = "Principe de Katamari (PS2)"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Katamari_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Katamari_Personaje" unique_id=1139560954]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_katamari")
-mesh = ExtResource("3_katamari_mesh")
+mesh = ExtResource("5_mesh_katamari")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Katamari_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Katamari_Personaje" unique_id=542536632]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, 0)
 shape = SubResource("CapsuleShape3D_katamari")
 
 [node name="Crash_Tag_Team_Personaje" type="CharacterBody3D" parent="." unique_id=2061878936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, 0)
+script = ExtResource("2_controlador")
+nombre_personaje = "Crash Tag Team Racing (PS2)"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Tag_Team_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Tag_Team_Personaje" unique_id=1574643689]
 transform = Transform3D(0.018, 0, 0, 0, 0.018, 0, 0, 0, 0.018, 0, 0, 0)
-mesh = ExtResource("7_crash_ttr")
+mesh = ExtResource("8_mesh_crash_ttr")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Tag_Team_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Tag_Team_Personaje" unique_id=432255123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, 0.13)
 shape = SubResource("CapsuleShape3D_crash_ttr")
 
 [node name="Crash_Nitro_Kart_Personaje" type="CharacterBody3D" parent="." unique_id=454493327]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
+script = ExtResource("2_controlador")
+nombre_personaje = "Crash Nitro Kart Save Icon (PS2)"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Nitro_Kart_Personaje"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Nitro_Kart_Personaje" unique_id=647149964]
 transform = Transform3D(0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0)
-mesh = ExtResource("8_crash_cnk")
+mesh = ExtResource("9_mesh_crash_cnk")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Nitro_Kart_Personaje"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Crash_Nitro_Kart_Personaje" unique_id=1584412283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87, 0.03)
 shape = SubResource("CapsuleShape3D_crash_cnk")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1425687881]
-transform = Transform3D(1, 0, 0, 0, 0.9848078, 0.17364796, 0, -0.17364796, 0.9848078, -0.28563353, 1.3652692, 4.4865894)
-fov = 48.03502
+transform = Transform3D(1, 0, 0, 0, 0.9848078, 0.17364796, 0, -0.17364796, 0.9848078, 0, 2.2, 4.2)
+fov = 60.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1044945730]
-transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 2, 4, 4)
+transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 5, 10, 5)
+shadow_enabled = true
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1173362302]
+
+[node name="PanelMenu" type="PanelContainer" parent="UI" unique_id=1561217614]
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 140.0
+grow_horizontal = 2
+
+[node name="VBox" type="VBoxContainer" parent="UI/PanelMenu" unique_id=1861431083]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LabelTitulo" type="Label" parent="UI/PanelMenu/VBox" unique_id=946111997]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "SELECCIONA TU PERSONAJE"
+horizontal_alignment = 1
+
+[node name="LabelActivo" type="Label" parent="UI/PanelMenu/VBox" unique_id=666712021]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "Controlando a: Crash Bandicoot Clasico (PS1)"
+horizontal_alignment = 1
+
+[node name="HBoxBotones" type="HBoxContainer" parent="UI/PanelMenu/VBox" unique_id=57112720]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BotonCrashClasico" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=664776983]
+layout_mode = 2
+focus_mode = 0
+text = "Crash Clasico (1)"
+
+[node name="BotonTrish" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=1922912553]
+layout_mode = 2
+focus_mode = 0
+text = "Trish DMC1 (2)"
+
+[node name="BotonCrashSkeleton" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=644827307]
+layout_mode = 2
+focus_mode = 0
+text = "Crash Esqueleto (3)"
+
+[node name="BotonKatamari" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=211880100]
+layout_mode = 2
+focus_mode = 0
+text = "Katamari (4)"
+
+[node name="BotonCrashTagTeam" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=1021455226]
+layout_mode = 2
+focus_mode = 0
+text = "Crash Tag Team (5)"
+
+[node name="BotonCrashNitroKart" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=293348382]
+layout_mode = 2
+focus_mode = 0
+text = "Crash Nitro Kart (6)"
+
+[node name="PanelControles" type="PanelContainer" parent="UI" unique_id=142250648]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -50.0
+offset_right = -20.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="LabelInstrucciones" type="Label" parent="UI/PanelControles" unique_id=1856309334]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 13
+text = "Movimiento: W A S D / Flechas | Salto: Espacio | Apuntar: Click Derecho | Disparar: Click Izquierdo | Seleccion: Teclas 1 al 6 o Clic"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashClasico" to="." method="_on_boton_crash_clasico_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonTrish" to="." method="_on_boton_trish_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashSkeleton" to="." method="_on_boton_crash_skeleton_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonKatamari" to="." method="_on_boton_katamari_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashTagTeam" to="." method="_on_boton_crash_tag_team_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashNitroKart" to="." method="_on_boton_crash_nitro_kart_pressed"]
