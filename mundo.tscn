@@ -22,6 +22,38 @@ size = Vector3(60, 1, 60)
 [sub_resource type="BoxShape3D" id="BoxShape3D_piso"]
 size = Vector3(60, 1, 60)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pared"]
+albedo_color = Color(0.12, 0.14, 0.18, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="BoxMesh_pared_horiz"]
+material = SubResource("StandardMaterial3D_pared")
+size = Vector3(61, 5, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pared_horiz"]
+size = Vector3(61, 5, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pared_vert"]
+material = SubResource("StandardMaterial3D_pared")
+size = Vector3(1, 5, 61)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pared_vert"]
+size = Vector3(1, 5, 61)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pilar"]
+albedo_color = Color(0.3, 0.33, 0.38, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pilar"]
+material = SubResource("StandardMaterial3D_pilar")
+top_radius = 1.0
+bottom_radius = 1.2
+height = 6.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pilar"]
+height = 6.0
+radius = 1.2
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_crash_clasico"]
 radius = 0.45
 height = 1.62
@@ -54,6 +86,32 @@ height = 1.72
 radius = 0.4
 height = 1.7
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_infierno"]
+sky_top_color = Color(0.28, 0.02, 0.02, 1)
+sky_horizon_color = Color(0.88, 0.18, 0.05, 1)
+ground_bottom_color = Color(0.12, 0.02, 0.02, 1)
+ground_horizon_color = Color(0.72, 0.12, 0.04, 1)
+sun_angle_max = 30.0
+sun_curve = 0.15
+
+[sub_resource type="Sky" id="Sky_infierno"]
+sky_material = SubResource("ProceduralSkyMaterial_infierno")
+
+[sub_resource type="Environment" id="Environment_infierno"]
+background_mode = 2
+sky = SubResource("Sky_infierno")
+ambient_light_source = 3
+ambient_light_color = Color(0.9, 0.2, 0.1, 1)
+ambient_light_sky_contribution = 0.8
+ambient_light_energy = 0.7
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.3
+glow_bloom = 0.1
+fog_enabled = true
+fog_light_color = Color(0.65, 0.12, 0.05, 1)
+fog_density = 0.005
+
 [node name="Mundo" type="Node3D" unique_id=478569238]
 script = ExtResource("1_mundo_script")
 
@@ -66,9 +124,182 @@ mesh = SubResource("BoxMesh_piso")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Piso" unique_id=1772650784]
 shape = SubResource("BoxShape3D_piso")
 
+[node name="Paredes" type="StaticBody3D" parent="."]
+
+[node name="Pared_Norte_Col" type="CollisionShape3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -30)
+shape = SubResource("BoxShape3D_pared_horiz")
+
+[node name="Mesh_Norte" type="MeshInstance3D" parent="Paredes/Pared_Norte_Col"]
+mesh = SubResource("BoxMesh_pared_horiz")
+
+[node name="Pared_Sur_Col" type="CollisionShape3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 30)
+shape = SubResource("BoxShape3D_pared_horiz")
+
+[node name="Mesh_Sur" type="MeshInstance3D" parent="Paredes/Pared_Sur_Col"]
+mesh = SubResource("BoxMesh_pared_horiz")
+
+[node name="Pared_Oeste_Col" type="CollisionShape3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 2.5, 0)
+shape = SubResource("BoxShape3D_pared_vert")
+
+[node name="Mesh_Oeste" type="MeshInstance3D" parent="Paredes/Pared_Oeste_Col"]
+mesh = SubResource("BoxMesh_pared_vert")
+
+[node name="Pared_Este_Col" type="CollisionShape3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2.5, 0)
+shape = SubResource("BoxShape3D_pared_vert")
+
+[node name="Mesh_Este" type="MeshInstance3D" parent="Paredes/Pared_Este_Col"]
+mesh = SubResource("BoxMesh_pared_vert")
+
+[node name="Pilares" type="StaticBody3D" parent="."]
+
+[node name="Pilar_N1_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3, -22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_N1_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_N2_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3, -22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_N2_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_N3_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_N3_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_N4_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, -22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_N4_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_N5_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3, -22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_N5_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_S1_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 3, 22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_S1_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_S2_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3, 22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_S2_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_S3_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_S3_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_S4_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, 22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_S4_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_S5_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3, 22)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_S5_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_O1_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 3, -11)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_O1_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_O2_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 3, 0)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_O2_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_O3_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 3, 11)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_O3_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_E1_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 3, -11)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_E1_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_E2_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 3, 0)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_E2_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_E3_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 3, 11)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_E3_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_Centro1_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3, -8)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_Centro1_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_Centro2_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, -8)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_Centro2_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_Centro3_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 3, 8)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_Centro3_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
+[node name="Pilar_Centro4_Col" type="CollisionShape3D" parent="Pilares"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, 8)
+shape = SubResource("CylinderShape3D_pilar")
+
+[node name="Mesh" type="MeshInstance3D" parent="Pilares/Pilar_Centro4_Col"]
+mesh = SubResource("CylinderMesh_pilar")
+
 [node name="Crash_Clasico_Personaje" type="CharacterBody3D" parent="." unique_id=937538653]
 script = ExtResource("2_controlador")
 nombre_personaje = "Crash Bandicoot Clasico (PS1)"
+altura_ojos = 1.3
 esta_activo = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Clasico_Personaje" unique_id=1798715541]
@@ -83,6 +314,7 @@ shape = SubResource("CapsuleShape3D_crash_clasico")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, 0)
 script = ExtResource("2_controlador")
 nombre_personaje = "Trish (Devil May Cry 1)"
+altura_ojos = 1.45
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Trish_DMC1_Personaje" unique_id=1594593107]
 transform = Transform3D(0.004, 0, 0, 0, 0.004, 0, 0, 0, 0.004, 0, 0, 0)
@@ -96,6 +328,7 @@ shape = SubResource("CapsuleShape3D_trish")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, 0)
 script = ExtResource("2_controlador")
 nombre_personaje = "Crash Traje Esqueleto (Xbox 360)"
+altura_ojos = 1.25
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Skeleton_Personaje" unique_id=456639107]
 transform = Transform3D(0.025, 0, 0, 0, 0.025, 0, 0, 0, 0.025, 0, 0, 0)
@@ -110,6 +343,7 @@ shape = SubResource("CapsuleShape3D_crash_skeleton")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
 script = ExtResource("2_controlador")
 nombre_personaje = "Principe de Katamari (PS2)"
+altura_ojos = 0.85
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Katamari_Personaje" unique_id=1139560954]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
@@ -124,6 +358,7 @@ shape = SubResource("CapsuleShape3D_katamari")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 0, 0)
 script = ExtResource("2_controlador")
 nombre_personaje = "Crash Tag Team Racing (PS2)"
+altura_ojos = 1.35
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Tag_Team_Personaje" unique_id=1574643689]
 transform = Transform3D(0.018, 0, 0, 0, 0.018, 0, 0, 0, 0.018, 0, 0, 0)
@@ -137,6 +372,7 @@ shape = SubResource("CapsuleShape3D_crash_ttr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8, 0, 0)
 script = ExtResource("2_controlador")
 nombre_personaje = "Crash Nitro Kart Save Icon (PS2)"
+altura_ojos = 1.35
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Crash_Nitro_Kart_Personaje" unique_id=647149964]
 transform = Transform3D(0.035, 0, 0, 0, 0.035, 0, 0, 0, 0.035, 0, 0, 0)
@@ -147,11 +383,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87, 0.03)
 shape = SubResource("CapsuleShape3D_crash_cnk")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1425687881]
-transform = Transform3D(1, 0, 0, 0, 0.9848078, 0.17364796, 0, -0.17364796, 0.9848078, 0, 2.2, 4.2)
+transform = Transform3D(0.9967454, -0.013998512, 0.0793896, -2.1896529e-10, 0.98480785, 0.17364791, -0.08061433, -0.17308278, 0.9816026, 0, 2.2, 4.2)
 fov = 60.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=128947192]
+environment = SubResource("Environment_infierno")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1044945730]
 transform = Transform3D(0.866025, -0.25, 0.433013, 0, 0.866025, 0.5, -0.5, -0.433013, 0.75, 5, 10, 5)
+light_color = Color(1, 0.6, 0.45, 1)
+light_energy = 1.3
 shadow_enabled = true
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1173362302]
@@ -217,6 +458,12 @@ layout_mode = 2
 focus_mode = 0
 text = "Crash Nitro Kart (6)"
 
+[node name="BotonCambiarCamara" type="Button" parent="UI/PanelMenu/VBox/HBoxBotones" unique_id=1293847561]
+layout_mode = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+text = "Vista: 3ra Persona (V)"
+
 [node name="PanelControles" type="PanelContainer" parent="UI" unique_id=142250648]
 anchors_preset = 12
 anchor_top = 1.0
@@ -233,7 +480,7 @@ grow_vertical = 0
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 13
-text = "Movimiento: W A S D / Flechas | Salto: Espacio | Apuntar: Click Derecho | Disparar: Click Izquierdo | Seleccion: Teclas 1 al 6 o Clic"
+text = "Mover: W A S D / Flechas | Camara: Raton | Vista 1ra/3ra: Tecla V o Rueda Raton | Salto: Espacio | Apuntar/Disparar: Clics | Cursor: ESC"
 horizontal_alignment = 1
 
 [connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashClasico" to="." method="_on_boton_crash_clasico_pressed"]
@@ -242,3 +489,4 @@ horizontal_alignment = 1
 [connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonKatamari" to="." method="_on_boton_katamari_pressed"]
 [connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashTagTeam" to="." method="_on_boton_crash_tag_team_pressed"]
 [connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCrashNitroKart" to="." method="_on_boton_crash_nitro_kart_pressed"]
+[connection signal="pressed" from="UI/PanelMenu/VBox/HBoxBotones/BotonCambiarCamara" to="." method="_on_boton_cambiar_camara_pressed"]

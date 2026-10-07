@@ -17,6 +17,9 @@ extends CharacterBody3D
 # Nombre que se mostrara en el menu / interfaz
 @export var nombre_personaje: String = "Personaje"
 
+# Altura de los ojos para la vista en primera persona (en metros)
+@export var altura_ojos: float = 1.3
+
 # Indica si este personaje esta seleccionado actualmente para ser controlado
 @export var esta_activo: bool = false
 
@@ -43,15 +46,34 @@ func _physics_process(delta: float) -> void:
 		# (ui_left: A / Flecha Izq, ui_right: D / Flecha Der, ui_up: W / Flecha Arriba, ui_down: S / Flecha Abajo)
 		var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 
-		# Convertimos el Vector2 de entrada a un Vector3 de movimiento 3D (X = horizontal, Z = adelante/atras)
-		var direccion: Vector3 = Vector3(input_dir.x, 0.0, input_dir.y).normalized()
+		# Calculamos la direccion de movimiento 3D relativa a la orientacion de la camara activa
+		var direccion: Vector3 = Vector3.ZERO
+		var camara_actual: Camera3D = get_viewport().get_camera_3d()
+
+		if camara_actual:
+			# Obtenemos el vector frontal de la camara proyectado en el plano horizontal (X, Z)
+			var cam_frente: Vector3 = -camara_actual.global_transform.basis.z
+			cam_frente.y = 0.0
+			cam_frente = cam_frente.normalized()
+
+			# Obtenemos el vector lateral derecho de la camara proyectado en el plano horizontal (X, Z)
+			var cam_derecha: Vector3 = camara_actual.global_transform.basis.x
+			cam_derecha.y = 0.0
+			cam_derecha = cam_derecha.normalized()
+
+			# Calculamos la direccion resultante: W/S mueven adelante/atras de la vista, A/D mueven lateralmente
+			# Nota: input_dir.y es negativo hacia adelante (W) y positivo hacia atras (S)
+			direccion = (cam_derecha * input_dir.x + cam_frente * -input_dir.y).normalized()
+		else:
+			# Respaldo global si no hay camara 3D activa
+			direccion = Vector3(input_dir.x, 0.0, input_dir.y).normalized()
 
 		if direccion != Vector3.ZERO:
 			# Asignamos la velocidad en los ejes X y Z
 			velocity.x = direccion.x * velocidad
 			velocity.z = direccion.z * velocidad
 
-			# Rotacion suave: Hacemos que el personaje gire mirando hacia donde avanza
+			# Rotacion suave: Hacemos que el personaje gire mirando hacia la direccion hacia donde se traslada
 			var angulo_objetivo: float = atan2(direccion.x, direccion.z)
 			rotation.y = lerp_angle(rotation.y, angulo_objetivo, 12.0 * delta)
 		else:
